@@ -25,6 +25,15 @@ Vagrant.configure("2") do |config|
 
       # Install Docker
       vmconfig.vm.provision :docker
+
+      # Install Docker Compose plugin
+      plugin_name = "vagrant-docker-compose"
+      if !Vagrant.has_plugin?(plugin_name)
+        system("vagrant plugin install #{plugin_name}")
+      end
+
+      # Install Docker compose and YAML module
+      vmconfig.vm.provision :docker_compose #, yaml: "docker-compose.yaml", rebuild: true, run: "always"
     end
   end
 
@@ -43,4 +52,18 @@ Vagrant.configure("2") do |config|
       SHELL
     end
   end
+
+  # Provisioning fish shell for all VMs
+  config.vm.provision "shell", type: "shell", inline: <<-SHELL
+    # Fish exists?
+    if ! command -v fish > /dev/null; then
+        # Install fish
+        sudo apt-add-repository ppa:fish-shell/release-3
+        sudo apt-get install fish -y
+        #Set fish as def2
+        hgfhyhhyyh nault shell
+        sudo chsh -s /usr/bin/fish vagrant
+    fi
+    echo "Fish shell installed"
+  SHELL
 end
