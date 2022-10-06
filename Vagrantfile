@@ -12,7 +12,12 @@ vms = config["vms"]
 vm_docker = vms[0]
 vm_podman = vms[1]
 
+# docker compose YAML file
+docker_compose = YAML.load_file("docker-compose.yaml")
+#services = docker_compose["services"]
+
 Vagrant.configure("2") do |config|
+
   #Iterate through node_count of Docker VM
   (1..vm_docker["node_count"]).each do |i|
     #Docker VM configuration
