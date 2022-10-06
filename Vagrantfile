@@ -61,7 +61,6 @@ Vagrant.configure("2") do |config|
         sudo apt-add-repository ppa:fish-shell/release-3
         sudo apt-get install fish -y
         #Set fish as def2
-        hgfhyhhyyh nault shell
         sudo chsh -s /usr/bin/fish vagrant
     fi
     echo "Fish shell installed"
