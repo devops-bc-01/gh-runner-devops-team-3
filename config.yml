@@ -1,0 +1,15 @@
+vms:
+  - name: vm_docker
+    memory: 5000
+    cpus: 2
+    box: ubuntu/jammy64
+
+  - name: vm_podman
+    memory: 1000
+    cpus: 2
+    box: ubuntu/jammy64
+
+node_count: 1
+
+
+  
