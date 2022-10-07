@@ -5,23 +5,26 @@
 require "yaml"
 
 # Read YAML file
-config = YAML.load_file("config.yml")
+config = YAML.load_file("provision.yml")
+auth = YAML.load_file("runner.yml")
 
-# calling list of VMs
+# calling list of VMs  config.yml
 vms = config["vms"]
 vm_docker = vms[0]
 vm_podman = vms[1]
 
-# docker compose YAML file
-#docker_compose = YAML.load_file("docker-compose.yaml")
-#services = docker_compose["services"]
+# calling environment variables from auth.yml
+REPO_NAME = auth["REPO_NAME"]
+BEARER_TOKEN = auth["BEARER_TOKEN"]
+RUNNER_URL = auth["RUNNER_URL"]
+REPO_URL = auth["REPO_URL"]
 
 Vagrant.configure("2") do |config|
   #Iterate through node_count of Docker VM
   (1..vm_docker["node_count"]).each do |i|
     #Docker VM configuration
     config.vm.define "#{vm_docker["name"]}#{i}" do |vmconfig|
-      config.vm.network "forwarded_port", guest: 9000, host: 8001
+      vmconfig.vm.network "forwarded_port", guest: 9000, host: 8001, auto_correct: true
       vmconfig.vm.box = vm_docker["box"]
       vmconfig.vm.provider "virtualbox" do |vb|
         vb.memory = vm_docker["memory"]
@@ -43,6 +46,12 @@ Vagrant.configure("2") do |config|
 
       # Run file docker-compose.yaml
       vmconfig.vm.provision "shell", inline: "cd /vagrant && docker compose up -d", privileged: false
+
+      # # Runner github
+      # vmconfig.vm.provision "runner", type: "shell", path: "./runner/runner_script.sh", env: { "RUNNER_NAME" => "#{vm_docker["name"]}#{i}",
+      #                                                                                          "BEARER_TOKEN" => "#{BEARER_TOKEN}",
+      #                                                                                          "RUNNER_URL" => "#{RUNNER_URL}",
+      #                                                                                          "REPO_URL" => "#{REPO_URL}" }
     end
   end
 
@@ -59,6 +68,11 @@ Vagrant.configure("2") do |config|
       vmconfig.vm.provision "podman", type: "shell", inline: <<-SHELL
         sudo apt-get install -y podman
       SHELL
+      # Runner github
+      # vmconfig.vm.provision "shell", path: "./runner/runner_script.sh", env: { "RUNNER_NAME" => "#{vm_podman["name"]}#{i}",
+      #                                                                          "BEARER_TOKEN" => "#{BEARER_TOKEN}",
+      #                                                                          "RUNNER_URL" => "#{RUNNER_URL}",
+      #                                                                          "REPO_URL" => "#{REPO_URL}" }
     end
   end
 
