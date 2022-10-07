@@ -17,11 +17,11 @@ vm_podman = vms[1]
 #services = docker_compose["services"]
 
 Vagrant.configure("2") do |config|
-
   #Iterate through node_count of Docker VM
   (1..vm_docker["node_count"]).each do |i|
     #Docker VM configuration
     config.vm.define "#{vm_docker["name"]}#{i}" do |vmconfig|
+      config.vm.network "forwarded_port", guest: 9000, host: 8001
       vmconfig.vm.box = vm_docker["box"]
       vmconfig.vm.provider "virtualbox" do |vb|
         vb.memory = vm_docker["memory"]
@@ -37,8 +37,12 @@ Vagrant.configure("2") do |config|
         system("vagrant plugin install #{plugin_name}")
       end
 
-      # Install Docker compose and YAML module
-      vmconfig.vm.provision :docker_compose #, yaml: "docker-compose.yaml", rebuild: true, run: "always"
+      # Install Docker compose and YAML modul
+      # Env method to read .env file
+      vmconfig.vm.provision :docker_compose
+
+      # Run file docker-compose.yaml
+      vmconfig.vm.provision "shell", inline: "cd /vagrant && docker compose up -d", privileged: false
     end
   end
 
