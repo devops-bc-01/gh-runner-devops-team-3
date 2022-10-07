@@ -40,15 +40,18 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - dockernet
+
   nexus:
     image: sonatype/nexus3
-    restart: on-failure
+    container_name: nexus
+    restart: always
     volumes:
       - "nexus-data:/nexus-data"
     ports:
       - "8081:8081"
     networks:
       - dockernet
+
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
@@ -60,7 +63,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - portainer-data:/data
     ports:
-      - 8000:9000
+      - 8000:8000
+      - 9443:9443
     networks:
       - dockernet
 
@@ -73,5 +77,5 @@ volumes:
 
 networks:
   dockernet:
-    driver: bridge
+
     
