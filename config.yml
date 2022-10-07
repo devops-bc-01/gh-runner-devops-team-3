@@ -1,0 +1,16 @@
+vms:
+  - name: devops-runner-team-3-vm_docker
+    node_count: 1
+    memory: 5000
+    cpus: 2
+    box: ubuntu/jammy64
+
+  - name: devops-runner-team-3-vm_podman
+    node_count: 1
+    memory: 1000
+    cpus: 1
+    box: ubuntu/jammy64
+
+
+
+  
