@@ -18,14 +18,16 @@ vm_podman = vms[1]
 #services = docker_compose["services"]
 
 Vagrant.configure("2") do |config|
-
   #Iterate through node_count of Docker VM
   (1..vm_docker["node_count"]).each do |i|
     #Docker VM configuration
     config.vm.define "#{vm_docker["name"]}#{i}" do |vmconfig|
+
       config.vm.network "forwarded_port", guest: 8080, host: 9001, auto_correct: true
       config.vm.network "forwarded_port", guest: 8081, host: 8081, auto_correct: true
       config.vm.network "forwarded_port", guest: 9000, host: 9003, auto_correct: true
+      config.vm.network "forwarded_port", guest: 8000, host: 9004, auto_correct: true
+      
       vmconfig.vm.box = vm_docker["box"]
       vmconfig.vm.provider "virtualbox" do |vb|
         vb.memory = vm_docker["memory"]
