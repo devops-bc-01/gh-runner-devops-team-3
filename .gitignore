@@ -3,10 +3,19 @@
 .vagrant/
 
 # Log files (if you are creating logs in debug mode, uncomment this)
-# *.log
+*.log
 
 ### Vagrant Patch ###
 *.box
 
 ### YMAL ###
 auth.yaml
+
+###Directory###
+.directory
+
+###Environment###
+.env
+
+### Portainet-data
+portainer-data
