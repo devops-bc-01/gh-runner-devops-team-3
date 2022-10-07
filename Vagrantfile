@@ -24,7 +24,12 @@ Vagrant.configure("2") do |config|
   (1..vm_docker["node_count"]).each do |i|
     #Docker VM configuration
     config.vm.define "#{vm_docker["name"]}#{i}" do |vmconfig|
-      vmconfig.vm.network "forwarded_port", guest: 9000, host: 8001, auto_correct: true
+      config.vm.network "forwarded_port", guest: 8080, host: 8080, auto_correct: true
+      config.vm.network "forwarded_port", guest: 8081, host: 9002, auto_correct: true
+      config.vm.network "forwarded_port", guest: 9000, host: 9003, auto_correct: true
+      config.vm.network "forwarded_port", guest: 8000, host: 9004, auto_correct: true
+      config.vm.network "forwarded_port", guest: 9443, host: 9005, auto_correct: true
+
       vmconfig.vm.box = vm_docker["box"]
       vmconfig.vm.provider "virtualbox" do |vb|
         vb.memory = vm_docker["memory"]
@@ -47,11 +52,11 @@ Vagrant.configure("2") do |config|
       # Run file docker-compose.yaml
       vmconfig.vm.provision "shell", inline: "cd /vagrant && docker compose up -d", privileged: false
 
-      # # Runner github
-      # vmconfig.vm.provision "runner", type: "shell", path: "./runner/runner_script.sh", env: { "RUNNER_NAME" => "#{vm_docker["name"]}#{i}",
-      #                                                                                          "BEARER_TOKEN" => "#{BEARER_TOKEN}",
-      #                                                                                          "RUNNER_URL" => "#{RUNNER_URL}",
-      #                                                                                          "REPO_URL" => "#{REPO_URL}" }
+      # Runner github
+      vmconfig.vm.provision "runner", type: "shell", path: "./runner/runner_script.sh", env: { "RUNNER_NAME" => "#{vm_docker["name"]}#{i}",
+                                                                                               "BEARER_TOKEN" => "#{BEARER_TOKEN}",
+                                                                                               "RUNNER_URL" => "#{RUNNER_URL}",
+                                                                                               "REPO_URL" => "#{REPO_URL}" }
     end
   end
 
@@ -69,10 +74,10 @@ Vagrant.configure("2") do |config|
         sudo apt-get install -y podman
       SHELL
       # Runner github
-      # vmconfig.vm.provision "shell", path: "./runner/runner_script.sh", env: { "RUNNER_NAME" => "#{vm_podman["name"]}#{i}",
-      #                                                                          "BEARER_TOKEN" => "#{BEARER_TOKEN}",
-      #                                                                          "RUNNER_URL" => "#{RUNNER_URL}",
-      #                                                                          "REPO_URL" => "#{REPO_URL}" }
+      vmconfig.vm.provision "shell", path: "./runner/runner_script.sh", env: { "RUNNER_NAME" => "#{vm_podman["name"]}#{i}",
+                                                                               "BEARER_TOKEN" => "#{BEARER_TOKEN}",
+                                                                               "RUNNER_URL" => "#{RUNNER_URL}",
+                                                                               "REPO_URL" => "#{REPO_URL}" }
     end
   end
 

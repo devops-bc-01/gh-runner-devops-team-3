@@ -1,11 +1,11 @@
 vms:
-  - name: d-devops-runner-team3
+  - name: dd-runner-team3
     node_count: 1
-    memory: 5000
+    memory: 8000
     cpus: 2
     box: ubuntu/jammy64
 
-  - name: p-devops-runner-team3
+  - name: pd-runner-team3
     node_count: 1
     memory: 1000
     cpus: 1

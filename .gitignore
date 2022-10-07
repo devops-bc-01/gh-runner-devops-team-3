@@ -17,3 +17,5 @@ auth.yaml
 ###Environment###
 .env
 
+### Portainet-data
+portainer-data

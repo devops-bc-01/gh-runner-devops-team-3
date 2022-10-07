@@ -24,9 +24,58 @@ services:
     networks: 
       - dockernet 
   
+  
+  
+  jenkins:
+    image: jenkins/jenkins:lts
+    privileged: true
+    restart: always
+    user: root
+    ports:
+      - 8080:8080
+      - 50000:50000
+    container_name: jenkins
+    volumes:
+      - jenkins_configuration:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - dockernet
+
+  nexus:
+    image: sonatype/nexus3
+    container_name: nexus
+    restart: always
+    volumes:
+      - "nexus-data:/nexus-data"
+    ports:
+      - "8081:8081"
+    networks:
+      - dockernet
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer-data:/data
+    ports:
+      - 8000:8000
+      - 9443:9443
+    networks:
+      - dockernet
+
 volumes:
   sonarqube_data:
   postgres_data:
+  nexus-data:
+  jenkins_configuration:
+  portainer-data: 
 
 networks:
   dockernet:
+
+    
