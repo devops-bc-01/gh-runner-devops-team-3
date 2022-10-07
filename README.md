@@ -12,5 +12,7 @@ Two machines are created: one  provisioned with docker and the other with podman
 
 ## Setup
 1. Clone this repository
-2. Run `vagrant up` in the root of the repository
-3. Run `vagrant ssh` to connect to the virtual machine
+2. Run `vagrant up dd-runner-team31` to create the machine with docker
+3. Run `vagrant up ps-runner-team31` to create the machine with podman
+4. Run `vagrant ssh dd-runner-team31` to connect to the machine with docker
+5. Run `vagrant ssh ps-runner-team31` to connect to the machine with podman
