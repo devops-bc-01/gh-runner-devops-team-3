@@ -1,0 +1,32 @@
+version: "3,9"
+services:
+  sonarqube:
+    image: sonarqube:8.9.1-community
+    container_name: sonarqube
+    ports:
+      - 9000:9000
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+    depends_on: 
+      - postgres
+    networks:
+      - dockernet
+
+  postgres:
+    image: postgres:alpine
+    container_name: postgresdb
+    volumes: 
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: devops
+    networks: 
+      - dockernet 
+  
+volumes:
+  sonarqube_data:
+  postgres_data:
+
+networks:
+  dockernet:
